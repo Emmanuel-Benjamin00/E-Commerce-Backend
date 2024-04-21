@@ -10,11 +10,11 @@ const { generateRefreshToken } = require("../config/refershToken");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const uniqid = require("uniqid");
-const {
-  transporter,
-  mailOptions,
-  randomStringGenerate,
-} = require("../common/nodeMail");
+// const {
+//   transporter,
+//   mailOptions,
+//   randomStringGenerate,
+// } = require("../common/nodeMail");
 const dotenv = require("dotenv");
 const orderModel = require("../models/orderModel");
 dotenv.config();
@@ -110,21 +110,21 @@ const loginAdmin = async (req, res) => {
 };
 
 //add to wishlist
-const getWishlist = async (req, res) => {
-  const { _id } = req.user;
-  try {
-    const findUser = await userModel.findById(_id).populate("wishlist");
-    res.status(200).send({
-      msg: "",
-      findUser,
-    });
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal Server Error",
-      error: error.message,
-    });
-  }
-};
+// const getWishlist = async (req, res) => {
+//   const { _id } = req.user;
+//   try {
+//     const findUser = await userModel.findById(_id).populate("wishlist");
+//     res.status(200).send({
+//       msg: "",
+//       findUser,
+//     });
+//   } catch (error) {
+//     res.status(500).send({
+//       message: "Internal Server Error",
+//       error: error.message,
+//     });
+//   }
+// };
 
 //save userAddress
 const saveAddress = async (req, res) => {
@@ -271,63 +271,63 @@ const logout = async (req, res) => {
 };
 
 //forgot password
-const forgotPassword = async (req, res) => {
-  try {
-    let user = await userModel.findOne({ email: req.body.email });
-    console.log(user);
-    if (user) {
-      const path = process.env.FRONT_END_URL + "/reset-password/" + user._id;
-      mailOptions.to = user.email;
-      mailOptions.html = `Hi ${user.firstname} Please find the OTP  in the following link to reset your password
-      <a href=${path}> Reset password link`;
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error("Error sending email: " + error);
-          res.status(500).send({
-            message: "Failed to send email.",
-            errorMsg: error.message,
-          });
-        } else {
-          console.log("Email sent: " + info.response);
-          res.status(201).send({
-            message: "Email Sent Successfully.",
-          });
-        }
-      });
-    } else {
-      res.status(400).send({
-        message: `Account with ${req.body.email} does not exist`,
-      });
-    }
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal Server Error",
-      error: error.message,
-    });
-  }
-};
+// const forgotPassword = async (req, res) => {
+//   try {
+//     let user = await userModel.findOne({ email: req.body.email });
+//     console.log(user);
+//     if (user) {
+//       const path = process.env.FRONT_END_URL + "/reset-password/" + user._id;
+//       mailOptions.to = user.email;
+//       mailOptions.html = `Hi ${user.firstname} Please find the OTP  in the following link to reset your password
+//       <a href=${path}> Reset password link`;
+//       transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//           console.error("Error sending email: " + error);
+//           res.status(500).send({
+//             message: "Failed to send email.",
+//             errorMsg: error.message,
+//           });
+//         } else {
+//           console.log("Email sent: " + info.response);
+//           res.status(201).send({
+//             message: "Email Sent Successfully.",
+//           });
+//         }
+//       });
+//     } else {
+//       res.status(400).send({
+//         message: `Account with ${req.body.email} does not exist`,
+//       });
+//     }
+//   } catch (error) {
+//     res.status(500).send({
+//       message: "Internal Server Error",
+//       error: error.message,
+//     });
+//   }
+// };
 
-const resetPassword = async (req, res) => {
-  try {
-    let user = await userModel.findOne({ _id: req.body.id });
-    if (user) {
-      user.password = req.body.password;
-      await user.save();
-      res.status(200).send({
-        message: "Password updated Succesfully",
-      });
-    } else {
-      res.status(400).send({
-        message: `Account with ${req.body.email} does not exist`,
-      });
-    }
-  } catch (error) {
-    res.status(500).send({
-      message: "Internal Server Error",
-      error: error.message,
-    });
-  }
-};
+// const resetPassword = async (req, res) => {
+//   try {
+//     let user = await userModel.findOne({ _id: req.body.id });
+//     if (user) {
+//       user.password = req.body.password;
+//       await user.save();
+//       res.status(200).send({
+//         message: "Password updated Succesfully",
+//       });
+//     } else {
+//       res.status(400).send({
+//         message: `Account with ${req.body.email} does not exist`,
+//       });
+//     }
+//   } catch (error) {
+//     res.status(500).send({
+//       message: "Internal Server Error",
+//       error: error.message,
+//     });
+//   }
+// };
 //add to cart
 const userCart = async (req, res) => {
   const { productId, quantity, price } = req.body;
