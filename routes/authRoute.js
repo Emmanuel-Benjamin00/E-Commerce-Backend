@@ -9,10 +9,10 @@ const {
   updateUser,
   handleRefreshToken,
   logout,
-  forgotPassword,
-  resetPassword,
+  // forgotPassword,
+  // resetPassword,
   loginAdmin,
-  getWishlist,
+  // getWishlist,
   saveAddress,
   userCart,
   getUserCart,
@@ -33,7 +33,7 @@ router.get("/all-users", getAllUsers);
 router.get("/refresh", handleRefreshToken);
 router.get("/getmyorders", authMiddleware, getMyOrders);
 router.get("/logout", logout);
-router.get("/wishlist", authMiddleware, getWishlist);
+// router.get("/wishlist", authMiddleware, getWishlist);
 router.get("/cart", authMiddleware, getUserCart);
 router.post("/add-to-cart", authMiddleware, userCart);
 router.post("/order/checkout", authMiddleware, checkout);
@@ -41,8 +41,8 @@ router.post("/order/paymentVerification", authMiddleware, paymentverification);
 
 router.put("/edit-user", authMiddleware, updateUser);
 
-router.post("/forgotPassword", forgotPassword);
-router.put("/resetPassword", resetPassword);
+// router.post("/forgotPassword", forgotPassword);
+// router.put("/resetPassword", resetPassword);
 
 router.put(
   "/order/update-order/:id",
