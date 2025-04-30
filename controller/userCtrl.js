@@ -20,22 +20,31 @@ const orderModel = require("../models/orderModel");
 dotenv.config();
 
 const createUser = async (req, res) => {
-  const email = req.body.email;
-  const findUser = await userModel.findOne({ email: email });
-  if (!findUser) {
-    const newUser = await userModel.create(req.body);
-    console.log(req.body);
-    res.status(200).send({
-      message: "User  Registered Succesfully",
-      newUser,
-    });
-  } else {
-    res.status(500).send({
-      message: `User Already Exists ${email}`,
+  const { email } = req.body; // Destructuring for cleaner code
+  try {
+    const findUser = await userModel.findOne({ email });
+
+    if (!findUser) {
+      const newUser = await userModel.create(req.body);
+      console.log("New user data:", req.body); // You can remove this log in production
+      return res.status(201).send({
+        message: "User Registered Successfully",
+        newUser,
+      });
+    } else {
+      return res.status(409).send({
+        message: `User Already Exists: ${email}`,
+      });
+    }
+  } catch (error) {
+    console.error("Registration Error:", error);  // Log the error on the backend
+    return res.status(500).send({
+      message: "Internal Server Error",
       error: error.message,
     });
   }
 };
+
 
 // Login a user
 const loginUserCtrl = async (req, res) => {
