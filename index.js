@@ -1,44 +1,52 @@
 const express = require("express");
 const dbConnect = require("./config/dbConnect");
 const cors = require("cors");
-const app = express();
 const dotenv = require("dotenv").config();
-const PORT = process.env.PORT || 4000;
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 
 const authRouter = require("./routes/authRoute");
 const productRouter = require("./routes/productRoute");
 const categoryRouter = require("./routes/categoryRoute");
 const brandRouter = require("./routes/brandRoute");
 const enqRouter = require("./routes/enqRoute");
-
-const bodyParser = require("body-parser");
 // const { notFound, errorHandler } = require('./middleware/errorHandler');
-const error = require("mongoose/lib/error");
-const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
 
+const app = express();
+const PORT = process.env.PORT || 4000;
+
+// Connect to the database
 dbConnect();
+
+// Middleware
 app.use(morgan("dev"));
-app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
-// app.use(bodyParser.json());
+
+// CORS Configuration
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://auraluxe-20.netlify.app"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
+// API Routes
 app.use("/user", authRouter);
 app.use("/product", productRouter);
 app.use("/category", categoryRouter);
 app.use("/brand", brandRouter);
 app.use("/enquiry", enqRouter);
-app.use(cookieParser());
 
-app.all("/*", function (req, res, next) {
-  
-  res.header("Access-Control-Allow-Origin", "https://auraluxe-20.netlify.app/");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  res.header(`Access-Control-Allow-Methods`, `GET,PUT,POST,DELETE`);
-  res.header(`Access-Control-Allow-Headers`, `Content-Type`);
-  next();
+// Fallback Route for 404
+app.use("*", (req, res) => {
+  res.status(404).json({ message: "Route not found" });
 });
+
+// Error handling middleware (uncomment if available)
 // app.use(notFound);
 // app.use(errorHandler);
+
+// Start server
 app.listen(PORT, () => {
-  console.log(`server is listening in ${PORT}`);
+  console.log(`Server is listening on port ${PORT}`);
 });
