@@ -26,8 +26,11 @@ app.use(express.json());
 // CORS Configuration
 const corsOptions = {
   origin: ["http://localhost:5173", "https://auraluxe-20.netlify.app"],
-  credentials: true,
+  credentials: true,  // Allow credentials (cookies, auth headers)
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"], // Allow necessary headers
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],  // Allow specific HTTP methods
 };
+
 app.use(cors(corsOptions));
 
 // API Routes
@@ -36,6 +39,11 @@ app.use("/product", productRouter);
 app.use("/category", categoryRouter);
 app.use("/brand", brandRouter);
 app.use("/enquiry", enqRouter);
+
+// Handle OPTIONS request (preflight)
+app.options("*", (req, res) => {
+  res.status(200).end();
+});
 
 // Fallback Route for 404
 app.use("*", (req, res) => {
