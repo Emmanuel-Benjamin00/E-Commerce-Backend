@@ -20,13 +20,12 @@ const orderModel = require("../models/orderModel");
 dotenv.config();
 
 const createUser = async (req, res) => {
-  const { email } = req.body; // Destructuring for cleaner code
+  const { email } = req.body; 
   try {
     const findUser = await userModel.findOne({ email });
-
     if (!findUser) {
       const newUser = await userModel.create(req.body);
-      console.log("New user data:", req.body); // You can remove this log in production
+      console.log("New user registered:", newUser);  // Log the created user for debugging
       return res.status(201).send({
         message: "User Registered Successfully",
         newUser,
@@ -37,13 +36,14 @@ const createUser = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Registration Error:", error);  // Log the error on the backend
+    console.error("Error during registration:", error); // Log detailed error message
     return res.status(500).send({
       message: "Internal Server Error",
       error: error.message,
     });
   }
 };
+
 
 
 // Login a user
